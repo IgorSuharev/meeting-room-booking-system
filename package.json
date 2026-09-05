@@ -1,24 +1,21 @@
 {
   "name": "meeting-room-booking-system",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "version": "0.0.1",
+  "description": "This project is a web server for booking rooms in an office.",
+  "homepage": "https://github.com/IgorSuharev/meeting-room-booking-system#readme",
+  "bugs": {
+    "url": "https://github.com/IgorSuharev/meeting-room-booking-system/issues"
   },
-  "keywords": [],
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IgorSuharev/meeting-room-booking-system.git"
+  },
   "license": "ISC",
-  "devEngines": {
-    "packageManager": {
-      "name": "pnpm",
-      "version": "11.24.0",
-      "onFail": "download"
-    }
-  },
-  "packageManager": "pnpm@11.24.0",
+  "author": "Igor Sukharev",
   "type": "module",
-  "dependencies": {
-    "pg": "^8.23.0"
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   }
 }
