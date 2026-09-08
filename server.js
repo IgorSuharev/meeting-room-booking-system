@@ -17,16 +17,29 @@ const getRoomsHandler = (req, res) => {
   res.end();
 };
 
-const elseHandler = (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-  res.statusCode = 400;
-  res.end("Else case.");
+const getRoomByIdHandler = (req, res) => {
+  const roomId = parseInt(req.url.split("/rooms/")[1]);
+  const room = rooms.find((room) => room.id === roomId);
+  if (room) {
+    res.setHeader("Content-Type", "application/json");
+    res.statusCode = 200;
+    res.write(JSON.stringify(room));
+    res.end();
+  } else {
+    res.setHeader("Content-Type", "application/json");
+    res.statusCode = 404;
+    res.write("Room not exist.");
+    res.end();
+  }
 };
 
 const server = createServer((req, res) => {
-  if (req.url === "/api/rooms" && req.method === "GET") {
-    getRoomsHandler(req, res);
-  } else {
+  if (req.method === "GET") {
+    if (req.url === "/api/rooms") {
+      getRoomsHandler(req, res);
+    } else if (req.url.match(/^\/api\/rooms\/(\d+)$/)) {
+      getRoomByIdHandler(req, res);
+    }
   }
 });
 
