@@ -7,7 +7,7 @@ const rooms = [
   {
     id: 1,
     name: "5.12",
-    slotsBooked: [{ login: "new.igorsuharev", slot: 14 }],
+    slotsBooked: [{ login: "new.igorsuharev", time: 14 }],
   },
 ];
 
@@ -32,7 +32,24 @@ const getRoomByIdHandler = (req, res) => {
   res.end();
 };
 
-const bookRoom = (req, res) => {};
+// TODO: Add error handling
+const bookRoom = (req, res) => {
+  let body = "";
+  req
+    .on("data", (chunk) => {
+      body += chunk;
+    })
+    .on("end", () => {
+      const data = JSON.parse(body);
+      const room = rooms.find((room) => room.id === data.id);
+      if (room) {
+        const slot = room.slotsBooked.find((slot) => slot.time === data.time);
+        if (!slot) {
+          room.slotsBooked.push({ login: data.login, time: data.time });
+        }
+      }
+    });
+};
 
 const server = createServer((req, res) => {
   if (req.method === "GET") {
