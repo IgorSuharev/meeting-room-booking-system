@@ -32,21 +32,35 @@ const getRoomByIdHandler = (req, res) => {
   res.end();
 };
 
-// TODO: Add error handling
 const bookRoom = (req, res) => {
+  res.setHeader("Content-Type", "application/json");
   let body = "";
   req
     .on("data", (chunk) => {
       body += chunk;
     })
     .on("end", () => {
-      const data = JSON.parse(body);
-      const room = rooms.find((room) => room.id === data.id);
-      if (room) {
-        const slot = room.slotsBooked.find((slot) => slot.time === data.time);
-        if (!slot) {
-          room.slotsBooked.push({ login: data.login, time: data.time });
+      try {
+        const data = JSON.parse(body);
+        const { id, login, time } = data;
+        const room = rooms.find((room) => room.id === id);
+        if (room) {
+          const slot = room.slotsBooked.find((slot) => slot.time === time);
+          if (!slot) {
+            room.slotsBooked.push({ login, time });
+            res.statusCode = 200;
+            res.end(`Slot booked: ${login}, ${time} hrs.`);
+          } else {
+            res.statusCode = 404;
+            res.end(`Slot already booked by ${slot.login}.`);
+          }
+        } else {
+          res.statusCode = 404;
+          res.end(`No rooms with id = ${id}.`);
         }
+      } catch (error) {
+        res.statusCode = 400;
+        res.end("Invalid JSON.");
       }
     });
 };
@@ -57,11 +71,23 @@ const server = createServer((req, res) => {
       getRoomsHandler(req, res);
     } else if (req.url.match(/^\/api\/rooms\/(\d+)$/)) {
       getRoomByIdHandler(req, res);
+    } else {
+      res.setHeader("Content-Type", "text/plain");
+      res.statusCode = 404;
+      res.end("Invalid URL.");
     }
   } else if (req.method === "POST") {
     if (req.url === "/api/book") {
       bookRoom(req, res);
+    } else {
+      res.setHeader("Content-Type", "text/plain");
+      res.statusCode = 404;
+      res.end("Invalid URL.");
     }
+  } else {
+    res.setHeader("Content-Type", "text/plain");
+    res.statusCode = 401;
+    res.end("Invalid method.");
   }
 });
 
