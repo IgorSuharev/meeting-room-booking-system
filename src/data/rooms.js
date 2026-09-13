@@ -2,7 +2,8 @@
 export const rooms = [
   {
     id: 1,
-    name: "5.12",
+    name: "Test room",
     slotsBooked: [{ login: "new.igorsuharev", time: 14 }],
   },
 ];
+
