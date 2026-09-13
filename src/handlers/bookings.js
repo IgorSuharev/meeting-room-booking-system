@@ -42,7 +42,7 @@ export const bookRoomHandler = (req, res) => {
 
       const room = rooms.find((room) => room.id === id);
       if (!room) {
-        res.statusCode = 404;
+        res.statusCode = 422;
         res.write(`{"error": "No rooms with id = ${id}."}`);
         res.end();
         return;
@@ -57,7 +57,7 @@ export const bookRoomHandler = (req, res) => {
       }
 
       room.slotsBooked.push({ login, time });
-      res.statusCode = 200;
+      res.statusCode = 201;
       res.write(`{"message": "Slot booked: ${login}, ${time} hrs."}`);
       res.end();
     });

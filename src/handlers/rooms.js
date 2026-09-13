@@ -17,7 +17,7 @@ export const getRoomByIdHandler = (req, res) => {
     res.write(JSON.stringify(room));
   } else {
     res.statusCode = 404;
-    res.write("Room not exist.");
+    res.write(`{"error": "Room not exist."}`);
   }
   res.end();
 };
