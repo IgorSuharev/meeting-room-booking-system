@@ -7,7 +7,7 @@ test("returns 409 on booking of already booked slot", () => {
   const reqMock = {
     on(event, callback) {
       if (event === "data") {
-        callback(`{"id": 1, "login": "another-user", "time": 14}`);
+        callback(`{"roomId": 1, "login": "another-user", "time": 14}`);
       }
 
       if (event === "end") {
@@ -42,7 +42,7 @@ test("returns 201 on successful booking", () => {
   const reqMock = {
     on(event, callback) {
       if (event === "data") {
-        callback(`{"id": 1, "login": "alice", "time": 10}`);
+        callback(`{"roomId": 1, "login": "alice", "time": 10}`);
       }
 
       if (event === "end") {

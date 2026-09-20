@@ -19,12 +19,12 @@ export const bookRoomHandler = (req, res) => {
         return;
       }
 
-      const { id, login, time } = data;
+      const { roomId, login, time } = data;
       if (
-        typeof id !== "number" ||
+        typeof roomId !== "number" ||
         typeof login !== "string" ||
         typeof time !== "number" ||
-        !Number.isInteger(id) ||
+        !Number.isInteger(roomId) ||
         !Number.isInteger(time)
       ) {
         res.statusCode = 400;
@@ -33,17 +33,17 @@ export const bookRoomHandler = (req, res) => {
         return;
       }
 
-      if (id < 0 || time < 0 || time >= 24) {
+      if (roomId < 0 || time < 0 || time >= 24) {
         res.statusCode = 400;
         res.write(`{"error": "id or time out of range."}`);
         res.end();
         return;
       }
 
-      const room = rooms.find((room) => room.id === id);
+      const room = rooms.find((room) => room.roomId === roomId);
       if (!room) {
         res.statusCode = 422;
-        res.write(`{"error": "No rooms with id = ${id}."}`);
+        res.write(`{"error": "No rooms with id = ${roomId}."}`);
         res.end();
         return;
       }
