@@ -15,7 +15,8 @@
   "type": "module",
   "main": "server.js",
   "scripts": {
-    "start": "node --watch --inspect --env-file=.env server.js"
+    "start": "node --watch --inspect --env-file=.env server.js",
+    "test": "node --test ./test/*"
   }
 }
 
