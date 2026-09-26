@@ -34,10 +34,15 @@ export const bookRoomHandler = (req, res) => {
       }
 
       if (roomId < 0 || time < 0 || time >= 24) {
-        res.statusCode = 400;
+        res.statusCode = 422;
         res.write(`{"error": "id or time out of range."}`);
         res.end();
         return;
+      }
+
+      if (login.length < 3 || 80 < login.length) {
+        res,statusCode = 422;
+        res.write(`{"error": "Login length must be between 3 and 80."}`)
       }
 
       const room = rooms.find((room) => room.roomId === roomId);
