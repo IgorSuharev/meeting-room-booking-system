@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 
 import { bookRoomHandler } from "../src/handlers/bookings.js";
+import { unbookRoomHandler } from "../src/handlers/bookings.js";
 
 test("returns 409 on booking of already booked slot", () => {
   const reqMock = {
@@ -37,7 +38,6 @@ test("returns 409 on booking of already booked slot", () => {
   );
 });
 
-
 test("returns 201 on successful booking", () => {
   const reqMock = {
     on(event, callback) {
@@ -71,3 +71,72 @@ test("returns 201 on successful booking", () => {
     `{"message": "Slot booked: alice, 10 hrs."}`,
   );
 });
+
+test("returns 409 on unbooking of foreign slot", () => {
+  const reqMock = {
+    on(event, callback) {
+      if (event === "data") {
+        callback(`{"roomId": 1, "login": "alice", "time": 14}`);
+      }
+
+      if (event === "end") {
+        callback();
+      }
+
+      return this;
+    },
+  };
+
+  let responseBody = "";
+  const resMock = {
+    statusCode: 200,
+    setHeader() {},
+    write(data) {
+      responseBody += data;
+    },
+    end() {},
+  };
+
+  unbookRoomHandler(reqMock, resMock);
+
+  assert.strictEqual(resMock.statusCode, 409);
+  assert.strictEqual(
+    responseBody,
+    `{"error": "Slot booked by another user, new.igorsuharev."}`,
+  );
+});
+
+test("returns 201 on successful unbooking", () => {
+  const reqMock = {
+    on(event, callback) {
+      if (event === "data") {
+        callback(`{"roomId": 1, "login": "new.igorsuharev", "time": 14}`);
+      }
+
+      if (event === "end") {
+        callback();
+      }
+
+      return this;
+    },
+  };
+
+  let responseBody = "";
+  const resMock = {
+    statusCode: 200,
+    setHeader() {},
+    write(data) {
+      responseBody += data;
+    },
+    end() {},
+  };
+
+  unbookRoomHandler(reqMock, resMock);
+
+  assert.strictEqual(resMock.statusCode, 201);
+  assert.strictEqual(
+    responseBody,
+    `{"message": "Slot unbooked: new.igorsuharev, 14 hrs."}`,
+  );
+});
+

@@ -1,5 +1,5 @@
 import { getRoomByIdHandler, getRoomsHandler } from "./handlers/rooms.js";
-import { bookRoomHandler } from "./handlers/bookings.js";
+import { bookRoomHandler, unbookRoomHandler } from "./handlers/bookings.js";
 
 export const router = (req, res) => {
   if (req.method === "GET") {
@@ -15,6 +15,14 @@ export const router = (req, res) => {
   } else if (req.method === "POST") {
     if (req.url === "/api/book") {
       bookRoomHandler(req, res);
+    } else {
+      res.setHeader("Content-Type", "text/plain");
+      res.statusCode = 404;
+      res.end("Invalid URL.");
+    }
+  } else if (req.method === "DELETE") {
+    if (req.url === "/api/unbook") {
+      unbookRoomHandler(req, res);
     } else {
       res.setHeader("Content-Type", "text/plain");
       res.statusCode = 404;
